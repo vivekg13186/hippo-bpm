@@ -1,0 +1,19 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "Hippo BPM",
+  "outputfilename": "hippo-bpm",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "vivek gangadharan",
+    "email": "vivek13186@gmail.com"
+  },"wails": {
+  "platform": {
+    "windows": { "icon": "build/icon.ico" },
+    "darwin": { "icon": "build/icon.icns" },
+    "linux": { "icon": "build/appicon.png" }
+  }
+}
+}

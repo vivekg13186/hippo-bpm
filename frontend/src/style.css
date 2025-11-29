@@ -1,0 +1,16 @@
+body{
+    margin: 0px;
+}
+
+.dark-mode {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+.light-mode {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.app{
+    height: 100%;
+}
