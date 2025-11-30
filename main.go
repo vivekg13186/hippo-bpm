@@ -2,18 +2,22 @@ package main
 
 import (
 	"embed"
+	"hippo-bpm/database"
+	"hippo-bpm/services"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 )
 
-//go:embed all:frontend/dist
 var assets embed.FS
 
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
+	database.Connect() // initialize SQLite DB
+
+	account := &services.AccountService{}
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -27,6 +31,7 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
+			account,
 		},
 	})
 

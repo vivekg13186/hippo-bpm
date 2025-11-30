@@ -9,6 +9,7 @@ import ToolkitExplorer from "./ToolkitExplorer";
 import ServiceRunner from "./ServiceRunner";
 import ThemeButton from "./ThemeButton";
 import InstanceViewer from "./InstanceViewer";
+import AccountExplorer from "./AccountExplorer";
 const App = () => {
   const [activeKey, setActiveKey] = useState("Welcome");
   const [darkMode, setDarkMode] = useState(false);
@@ -60,6 +61,19 @@ const App = () => {
     //console.log("click", e);
     const key = e.key;
     switch (key) {
+      case "0":{
+          const newKey = "Accounts";
+          if (!items.find((item) => item.key === newKey)) {
+            const newItem = {
+              key: newKey,
+              label: "Accounts",
+              children: <AccountExplorer />,
+            };
+            setItems([...items, newItem]);
+          }
+          setActiveKey(newKey);
+      }
+      break;
       case "1":
         {
           const newKey = "App Explorer"+Math.floor(Math.random()*1000);
@@ -121,6 +135,10 @@ const App = () => {
     }
   };
   const mainMenu = [
+    {
+      key: "0",
+      label: "Accounts",
+    },
     {
       key: "1",
       label: "App Explorer",
