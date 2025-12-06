@@ -1,13 +1,27 @@
-import { useState } from "react";
-import { Button, Tree, Form, Input, Radio, Table, Space } from "antd";
+import { useState ,useEffect} from "react";
+import { Button, Tree, Form, Input, Radio, Table, Space ,Select} from "antd";
 import { GetUrl } from "../wailsjs/go/main/App";
+import { GetAllAccounts } from "../wailsjs/go/services/AccountService.js";
+
 function AppExplorer() {
   const [snapshots, setSnaphots] = useState([]);
   const [treeData, setTreeData] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+
+    useEffect(() => {
+      GetAllAccounts().then((accs) => {
+        setAccounts(accs);
+      });
+    }, []);
+
   const onFinish = async (values) => {
    try {
-      const password = values.domain === "Basic" ? values.password : values.zenapiKey;
-       const result = await GetUrl(values.url+"/rest/bpm/wle/v1/processApps", values.username, password, values.domain);
+       const a = accounts.find((a) => a.id == values.account.value);
+
+       const result = await GetUrl(
+        a.url+"/rest/bpm/wle/v1/processApps", 
+        a.username, authDomain === "Basic" ? a.password : a.zenApiKey,
+        authDomain);
       var json = JSON.parse(result);
       setTreeData(json.data.processAppsList);
     } catch (error) {
@@ -23,15 +37,11 @@ function AppExplorer() {
   });
 
   const [authDomain, setAuthDomain] = useState("ZenApiKey");
-  const onDomainChange = e => {
-    setAuthDomain(e.target.value);
-  };
+  
   const onFinishFailed = (errorInfo) => {
     //console.log("Failed:", errorInfo);
   };
-  const onSelect = (selectedKeys, info) => {
-    //console.log("selected", selectedKeys, info);
-  };
+ 
   const setRecord = (record) => () => {
     //console.log("record", record);
     setSnaphots(record.installedSnapshots || []);
@@ -113,49 +123,23 @@ function AppExplorer() {
         autoComplete="off"
         layout="horizontal"
       >
+        
         <div style={{ width: "90%" }}>
-          <Form.Item
-            label="Url"
-            name="url"
-            type="url"
-            rules={[{ required: true, message: "BPM url" }]}
-          >
-            <Input   />
-          </Form.Item>
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[{ required: true, message: "Please input your username!" }]}
-          >
-            <Input  />
-          </Form.Item>
-          <Form.Item
-            label="Auth Domain"
-            name="domain"
-            rules={[{ required: true, message: "Select a option" }]}
-          >
-            <Radio.Group value={authDomain} onChange={onDomainChange}>
-              <Radio value="Basic">Basis Auth</Radio>
-              <Radio value="ZenApiKey">Zen api key</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: (authDomain === "Basic"), message: "Please input your password!" }]}
-          >
-            <Input.Password disabled={authDomain === "ZenApiKey"} />
-          </Form.Item>
-          <Form.Item
-            label="ZenApi Key"
-            name="zenapiKey"
-            rules={[{ required: (authDomain === "ZenApiKey"), message: "Zen API key" }]}
-          >
-            <Input.Password
-              disabled={authDomain === "Basic"} 
-            />
-          </Form.Item>
-          <Form.Item label={null}>
+         
+         <Form.Item name="account" label="Account">
+          <Select
+            placeholder="Select an account"
+            options={accounts.map((acc) => ({
+              label: acc.title,
+              value: acc.id,
+            }))}
+            showSearch
+            optionFilterProp="label"
+            labelInValue // ← important to get object instead of just value
+            style={{ width: "100%" }}
+          />
+        </Form.Item>
+         <Form.Item label={null}>
             <Button type="primary" htmlType="submit">
               Get Apps
             </Button>

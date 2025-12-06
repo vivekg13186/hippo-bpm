@@ -33,7 +33,7 @@ function AccountExplorer() {
     { title: "Title", dataIndex: "title", key: "id" },
     { title: "URL", dataIndex: "url", key: "url" },
     { title: "Username", dataIndex: "username", key: "username" },
-    { title: "Password", dataIndex: "password", key: "password" },
+    { title: "Auth", dataIndex: "authDomain", key: "authDomain" },
     {
       title: "Action",
       key: "action",
@@ -87,7 +87,7 @@ function AccountExplorer() {
         </Form.Item>
         <Form.Item
           label="Auth Domain"
-          name="domain"
+          name="authDomain"
           rules={[{ required: true, message: "Select a option" }]}
         >
           <Radio.Group value={authDomain} onChange={onDomainChange}>
